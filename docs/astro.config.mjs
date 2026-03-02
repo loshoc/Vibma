@@ -3,7 +3,8 @@ import starlight from "@astrojs/starlight";
 import starlightThemeFlexoki from "starlight-theme-flexoki";
 
 export default defineConfig({
-  site: "https://github.com/ufira-ai/Vibma",
+  site: "https://ufira-ai.github.io",
+  base: "/Vibma",
   integrations: [
     starlight({
       title: "Vibma",
