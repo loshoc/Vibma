@@ -371,9 +371,20 @@ async function resolveAnyStyle(idOrName: string): Promise<BaseStyle> {
 
 // ─── Patch Styles Handler ────────────────────────────────────────
 
+// Fields applicable to each style type (excluding shared fields: id, name)
+const PAINT_FIELDS = ["color"];
+const TEXT_FIELDS = ["fontFamily", "fontStyle", "fontSize", "lineHeight", "letterSpacing", "textCase", "textDecoration"];
+const EFFECT_FIELDS = ["effects"];
+const TYPE_FIELDS: Record<string, string[]> = { PAINT: PAINT_FIELDS, TEXT: TEXT_FIELDS, EFFECT: EFFECT_FIELDS };
+
 async function patchStyleSingle(p: any) {
   const style = await resolveAnyStyle(p.id);
   if (p.name !== undefined) style.name = p.name;
+
+  // Warn about inapplicable fields
+  const applicable = TYPE_FIELDS[style.type] || [];
+  const allTypeFields = [...PAINT_FIELDS, ...TEXT_FIELDS, ...EFFECT_FIELDS];
+  const ignored = allTypeFields.filter(f => p[f] !== undefined && !applicable.includes(f));
 
   if (style.type === "PAINT") {
     const ps = style as PaintStyle;
@@ -415,10 +426,15 @@ async function patchStyleSingle(p: any) {
     }
   }
 
+  // Collect warnings
+  const hints: string[] = [];
+  if (ignored.length > 0) {
+    hints.push(`${ignored.join(", ")} not applicable for ${style.type} style, ignored.`);
+  }
+
   // WCAG recommendations for text styles
   if (style.type === "TEXT") {
     const ts = style as TextStyle;
-    const hints: string[] = [];
     if (ts.fontSize < 12) hints.push("WCAG: Min 12px text recommended.");
     const lh = ts.lineHeight as any;
     if (lh && lh.unit !== "AUTO") {
@@ -429,9 +445,9 @@ async function patchStyleSingle(p: any) {
         hints.push(`WCAG: Line height ${Math.ceil(ts.fontSize * 1.5)}px (1.5×) recommended.`);
       }
     }
-    if (hints.length > 0) return { warning: hints.join(" ") };
   }
 
+  if (hints.length > 0) return { warning: hints.join(" ") };
   return "ok";
 }
 
