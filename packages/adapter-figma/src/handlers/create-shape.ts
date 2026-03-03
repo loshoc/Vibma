@@ -8,6 +8,7 @@ async function createSingleSection(p: any) {
   section.y = p.y ?? 0;
   section.resizeWithoutConstraints(p.width ?? 500, p.height ?? 500);
   section.name = p.name || "Section";
+  section.fills = [];
   await appendToParent(section, p.parentId);
   return { id: section.id };
 }
