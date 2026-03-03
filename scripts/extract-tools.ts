@@ -303,8 +303,13 @@ try {
   const userContentZh = agentSectionIdxZh !== -1 ? carryMeZh.slice(0, agentSectionIdxZh) : carryMeZh;
   const linesZh = userContentZh.split("\n");
   let startIdxZh = 0;
-  if (linesZh[0]?.startsWith("# ")) startIdxZh = 1;
+  // Skip language-switcher blockquote (e.g. "> **[English](...)**")
+  while (startIdxZh < linesZh.length && linesZh[startIdxZh]?.startsWith(">")) startIdxZh++;
   if (linesZh[startIdxZh]?.trim() === "") startIdxZh++;
+  // Skip H1
+  if (linesZh[startIdxZh]?.startsWith("# ")) startIdxZh++;
+  if (linesZh[startIdxZh]?.trim() === "") startIdxZh++;
+  // Skip intro blockquote
   while (startIdxZh < linesZh.length && linesZh[startIdxZh]?.startsWith(">")) startIdxZh++;
   if (linesZh[startIdxZh]?.trim() === "") startIdxZh++;
   const bodyZh = linesZh.slice(startIdxZh).join("\n").trim();
@@ -339,16 +344,17 @@ const carryMe = readFileSync(carryMePath, "utf-8");
 // Keep content up to (but not including) the "Instructions for AI Agents" section
 const agentSectionIdx = carryMe.indexOf("\n---\n\n## Instructions for AI Agents");
 const userContent = agentSectionIdx !== -1 ? carryMe.slice(0, agentSectionIdx) : carryMe;
-// Remove the first H1 and the intro blockquote
+// Remove language switcher, H1, and intro blockquote
 const lines = userContent.split("\n");
 let startIdx = 0;
-// Skip H1 line
-if (lines[0]?.startsWith("# ")) startIdx = 1;
-// Skip blank line after H1
-if (lines[startIdx]?.trim() === "") startIdx++;
-// Skip blockquote lines ("> ...")
+// Skip language-switcher blockquote (e.g. "> **[简体中文](...)**")
 while (startIdx < lines.length && lines[startIdx]?.startsWith(">")) startIdx++;
-// Skip trailing blank line after blockquote
+if (lines[startIdx]?.trim() === "") startIdx++;
+// Skip H1 line
+if (lines[startIdx]?.startsWith("# ")) startIdx++;
+if (lines[startIdx]?.trim() === "") startIdx++;
+// Skip intro blockquote
+while (startIdx < lines.length && lines[startIdx]?.startsWith(">")) startIdx++;
 if (lines[startIdx]?.trim() === "") startIdx++;
 const body = lines.slice(startIdx).join("\n").trim();
 

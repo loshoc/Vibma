@@ -4,13 +4,6 @@ on:
   push:
     tags:
       - "v*"
-    branches:
-      - main
-    paths:
-      - "docs/**"
-      - "packages/core/src/tools/**"
-      - "CARRYME.md"
-      - "CARRYME.zh-CN.md"
   workflow_dispatch:
 
 permissions:
