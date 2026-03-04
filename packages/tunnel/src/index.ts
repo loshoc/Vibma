@@ -218,8 +218,9 @@ wss.on("connection", (ws: WebSocket) => {
             peer: { role: otherRole, version: other.version, name: other.name },
           }));
 
-          // Version mismatch warning — tell each side who needs to update
-          if (version && other.version && version !== other.version) {
+          // Version mismatch warning — compare only major.minor.patch (ignore prerelease suffix)
+          const semverBase = (v: string) => v.replace(/[-+].*$/, "");
+          if (version && other.version && semverBase(version) !== semverBase(other.version)) {
             const newer = version > other.version ? role : otherRole;
             const newerVer = newer === role ? version : other.version;
             const olderVer = newer === role ? other.version : version;
