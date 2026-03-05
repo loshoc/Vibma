@@ -63,14 +63,14 @@ for pkg in packages/core/package.json packages/adapter-figma/package.json packag
 done
 
 sed -i '' "s/const VIBMA_VERSION = \"[^\"]*\"/const VIBMA_VERSION = \"$VERSION\"/" \
-  packages/adapter-figma/plugin/ui.html
-echo "  packages/adapter-figma/plugin/ui.html -> $VERSION"
+  packages/adapter-figma/src/plugin/ui.html
+echo "  packages/adapter-figma/src/plugin/ui.html -> $VERSION"
 echo ""
 
 # ── Commit, tag, push ────────────────────────────────────────────────
 
 echo "Committing and tagging..."
-git add packages/core/package.json packages/adapter-figma/package.json packages/tunnel/package.json packages/adapter-figma/plugin/ui.html
+git add packages/core/package.json packages/adapter-figma/package.json packages/tunnel/package.json packages/adapter-figma/src/plugin/ui.html
 git commit -m "release: $TAG"
 git tag "$TAG"
 
