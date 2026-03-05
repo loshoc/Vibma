@@ -26,6 +26,11 @@ jobs:
       - name: Build all packages
         run: npm run build
 
+      # Remove the _authToken line that setup-node wrote so npm
+      # falls through to OIDC trusted-publishing instead.
+      - name: Switch to OIDC auth
+        run: sed -i 's/\/\/registry.npmjs.org\/:_authToken=.*//' "$NPM_CONFIG_USERCONFIG"
+
       # Detect pre-release tags like v0.4.0-rc.1, v0.4.0-beta.2
       # Pre-releases publish to npm under a "next" dist-tag so
       # `npm install @ufira/vibma` still gets the latest stable.
@@ -41,17 +46,11 @@ jobs:
           fi
 
       # ── npm publish (trusted publishing via OIDC) ────────────────────
-      # NODE_AUTH_TOKEN is intentionally empty — trusted publishing uses
-      # the OIDC identity token (id-token: write) instead of a static token.
       - name: Publish @ufira/vibma
-        env:
-          NODE_AUTH_TOKEN: ""
         run: npm publish -w packages/core --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }}
 
       - name: Publish @ufira/vibma-tunnel
         continue-on-error: true
-        env:
-          NODE_AUTH_TOKEN: ""
         run: npm publish -w packages/tunnel --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }}
 
       # ── Zip release assets ───────────────────────────────────────────
