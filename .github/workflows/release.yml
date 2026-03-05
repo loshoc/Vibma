@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   id-token: write
+  actions: write
 
 jobs:
   release:
@@ -54,7 +55,7 @@ jobs:
           mkdir -p staging
           (cd plugin && zip -q "$GITHUB_WORKSPACE/staging/vibma-plugin.zip" manifest.json code.js ui.html)
           (cd packages/tunnel/dist && zip -q "$GITHUB_WORKSPACE/staging/vibma-tunnel.zip" index.js)
-          (cd packages/core/dist && zip -qr "$GITHUB_WORKSPACE/staging/vibma-mcp.zip" .)
+          (cd packages/core/dist && zip -qr "$GITHUB_WORKSPACE/staging/vibma-mcp.zip" . -x '*.map' '*.d.ts' '*.d.cts')
 
       # ── GitHub release ───────────────────────────────────────────────
       - name: Create GitHub release
@@ -72,3 +73,10 @@ jobs:
             --title "$GITHUB_REF_NAME" \
             --generate-notes \
             $PRERELEASE_FLAG
+
+      # ── Deploy docs (stable releases only) ──────────────────────────
+      - name: Deploy docs
+        if: steps.dist-tag.outputs.prerelease == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run docs.yml --ref main
