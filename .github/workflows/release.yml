@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
@@ -25,11 +25,6 @@ jobs:
 
       - name: Build all packages
         run: npm run build
-
-      # Remove the _authToken line that setup-node wrote so npm
-      # falls through to OIDC trusted-publishing instead.
-      - name: Switch to OIDC auth
-        run: sed -i 's/\/\/registry.npmjs.org\/:_authToken=.*//' "$NPM_CONFIG_USERCONFIG"
 
       # Detect pre-release tags like v0.4.0-rc.1, v0.4.0-beta.2
       # Pre-releases publish to npm under a "next" dist-tag so
@@ -45,13 +40,13 @@ jobs:
             echo "prerelease=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # ── npm publish (trusted publishing via OIDC) ────────────────────
+      # ── npm publish (trusted publishing via OIDC, no token needed) ───
       - name: Publish @ufira/vibma
-        run: npm publish -w packages/core --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }}
+        run: npm publish -w packages/core --access public --tag ${{ steps.dist-tag.outputs.tag }}
 
       - name: Publish @ufira/vibma-tunnel
         continue-on-error: true
-        run: npm publish -w packages/tunnel --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }}
+        run: npm publish -w packages/tunnel --access public --tag ${{ steps.dist-tag.outputs.tag }}
 
       # ── Zip release assets ───────────────────────────────────────────
       - name: Create zip assets
