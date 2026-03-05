@@ -374,8 +374,10 @@ wss.on("connection", (ws: WebSocket) => {
   });
 });
 
-// uncomment this to allow connections in windows wsl
-// httpServer.listen(port, "0.0.0.0", () => {
-httpServer.listen(port, () => {
-  console.log(`WebSocket server running on port ${port}`);
+// Security note: bind to localhost by default so the tunnel isn't exposed to LAN.
+// Set VIBMA_HOST=0.0.0.0 to explicitly opt into LAN exposure (e.g. for WSL scenarios).
+const host = process.env.VIBMA_HOST || "127.0.0.1";
+
+httpServer.listen(port, host, () => {
+  console.log(`Vibma tunnel running on http://${host}:${port}`);
 });
