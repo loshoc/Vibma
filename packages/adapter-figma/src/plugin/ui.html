@@ -63,7 +63,7 @@
 
       .version-chip {
         font-size: 11px;
-        color: #777;
+        color: #b0b0b0;
         font-variant-numeric: tabular-nums;
       }
 
@@ -84,7 +84,7 @@
       label {
         font-size: 10.5px;
         font-weight: 500;
-        color: #888;
+        color: #b8b8b8;
         letter-spacing: 0.04em;
         text-transform: uppercase;
       }
@@ -115,7 +115,7 @@
         cursor: pointer;
         appearance: none;
         -webkit-appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aaa'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 7px center;
         padding-right: 20px;
@@ -123,7 +123,7 @@
 
       /* Button */
       button {
-        background-color: #18a0fb;
+        background-color: #0f68c2;
         border: none;
         color: #fff;
         padding: 8px 14px;
@@ -138,7 +138,7 @@
       }
 
       button:hover:not(:disabled) {
-        background-color: #0d8ee0;
+        background-color: #0d5ba8;
       }
 
       button:active:not(:disabled) {
@@ -178,7 +178,7 @@
 
       .status.disconnected {
         border-left-color: #3a3a3a;
-        color: #a0a0a0;
+        color: #b8b8b8;
         background-color: #1c1c1c;
       }
 
@@ -191,7 +191,7 @@
       /* Warning */
       #warning-box {
         font-size: 11.5px;
-        color: #a8a8a8;
+        color: #c0c0c0;
         line-height: 1.55;
         padding: 10px 12px;
         background-color: #1c1c1c;
@@ -202,7 +202,7 @@
       /* Footer row */
       .footer-row {
         font-size: 11.5px;
-        color: #777;
+        color: #b0b0b0;
         text-align: center;
       }
 
@@ -240,20 +240,20 @@
       .progress-title {
         font-size: 10.5px;
         font-weight: 500;
-        color: #888;
+        color: #b8b8b8;
         text-transform: uppercase;
         letter-spacing: 0.04em;
       }
 
       #progress-percentage {
         font-size: 11px;
-        color: #777;
+        color: #b0b0b0;
         font-variant-numeric: tabular-nums;
       }
 
       #progress-message {
         font-size: 12px;
-        color: #909090;
+        color: #b0b0b0;
         line-height: 1.4;
       }
 
@@ -274,7 +274,7 @@
 
       .progress-footer {
         font-size: 11px;
-        color: #777;
+        color: #b0b0b0;
       }
 
       .operation-complete { color: #4ade80; }
@@ -456,7 +456,7 @@
           const ver = state.mcpPeer.version ? ` (v${state.mcpPeer.version})` : "";
           msg += `<br>${t("sessionLabel", { name, version: ver })}`;
         } else {
-          msg += `<br><span style="color:#555">${t("waitingMcp")}</span>`;
+          msg += `<br><span style="color:#7fa8c4">${t("waitingMcp")}</span>`;
         }
         if (state.versionWarning) {
           msg += `<br><span style="color:#c9890a">\u26a0 ${state.versionWarning}</span>`;
